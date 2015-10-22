@@ -23,6 +23,7 @@ namespace NUnit.ConsoleRunner
 		public static int Main(string[] args)
 		{
 			ConsoleOptions options = new ConsoleOptions(args);
+            int errcode = 0;
 
             // Create SettingsService early so we know the trace level right at the start
             SettingsService settingsService = new SettingsService();
@@ -88,32 +89,34 @@ namespace NUnit.ConsoleRunner
                 }
             }
 
-			try
-			{
-				ConsoleUi consoleUi = new ConsoleUi();
-				return consoleUi.Execute( options );
-			}
-			catch( FileNotFoundException ex )
-			{
-				Console.WriteLine( ex.Message );
-				return ConsoleUi.FILE_NOT_FOUND;
-			}
-			catch( Exception ex )
-			{
-				Console.WriteLine( "Unhandled Exception:\n{0}", ex.ToString() );
-				return ConsoleUi.UNEXPECTED_ERROR;
-			}
-			finally
-			{
-				if(options.wait)
-				{
-					Console.Out.WriteLine("\nHit <enter> key to continue");
-					Console.ReadLine();
-				}
+            try
+            {
+                ConsoleUi consoleUi = new ConsoleUi();
+                errcode = consoleUi.Execute(options);
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+                errcode = ConsoleUi.FILE_NOT_FOUND;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unhandled Exception:\n{0}", ex.ToString());
+                errcode = ConsoleUi.UNEXPECTED_ERROR;
+            }
+            finally
+            {
+                if (options.wait)
+                {
+                    Console.Out.WriteLine("\nHit <enter> key to continue");
+                    Console.ReadLine();
+                }
 
-				log.Info( "NUnit-console.exe terminating" );
-			}
+                log.Info("NUnit-console.exe terminating");
+            }
 
+            Environment.Exit(errcode);
+            return errcode;
 		}
 
 		private static void WriteCopyright()
