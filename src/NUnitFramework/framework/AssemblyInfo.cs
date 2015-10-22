@@ -12,5 +12,5 @@ using System.Security;
 [assembly: AllowPartiallyTrustedCallers]
 
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("../../nunit.snk")]
+[assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("")]
